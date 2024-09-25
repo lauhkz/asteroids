@@ -2,6 +2,7 @@
 # the open-source pygame library
 # throughout this file
 
+import sys
 from asteroidfield import AsteroidField
 from asteroid import Asteroid
 from constants import *
@@ -37,14 +38,21 @@ def main():
 
         screen.fill("black")
 
-        for unit in updatable:
-            unit.update(dt)
+        for obj in updatable:
+            obj.update(dt)
 
-        for unit in asteroids_group:
-            unit.collisions(player)
+        for asteroid in asteroids_group:
+            if asteroid.collisions(player):
+                print("Game Over!")
+                sys.exit()
 
-        for unit in drawable:
-            unit.draw(screen)
+            for bullet in shoots:
+                if asteroid.collisions(bullet):
+                    bullet.kill()
+                    asteroid.split()
+
+        for obj in drawable:
+            obj.draw(screen)
 
         pygame.display.flip()
 
